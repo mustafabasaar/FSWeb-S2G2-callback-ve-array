@@ -121,30 +121,70 @@ console.log("görev 6 sonuç: ", OrtalamaGolSayisi(Finaller(fifaData)));
 	İpucu: "takım kısaltmaları" (team initials) için datada araştırma yapın!
 İpucu: `.reduce` Kullanın*/
 
-function UlkelerinKazanmaSayilari(/* kodlar buraya */) {
-  /* kodlar buraya */
-  /* kodlar buraya */
-  /* kodlar buraya */
+function UlkelerinKazanmaSayilari(data) {
+  let winnerteamFinals = [];
+  for (let match of Finaller(data)) {
+    if (match["Home Team Goals"] > match["Away Team Goals"]) {
+      winnerteamFinals.push(match["Home Team Initials"]);
+    } else {
+      winnerteamFinals.push(match["Away Team Initials"]);
+    }
+  }
+  const winnerCount = winnerteamFinals.reduce((acc, currentValue) => {
+    if (acc[currentValue] === undefined) {
+      acc[currentValue] = 1;
+    } else {
+      acc[currentValue]++;
+    }
+    return acc;
+  }, {});
+  return winnerCount;
 }
-
+console.log("bonus 1 sonuç:", UlkelerinKazanmaSayilari(fifaData));
 /*  BONUS 2:  
 EnCokGolAtan() isminde bir fonksiyon yazın, `data` yı parametre olarak alsın ve Dünya kupası finallerinde en çok gol atan takımı döndürsün */
 
-function EnCokGolAtan(/* kodlar buraya */) {
-  /* kodlar buraya */
-  /* kodlar buraya */
-  /* kodlar buraya */
+function EnCokGolAtan(data) {
+  finalMatches = Finaller(data);
+  toplamGol = finalMatches.reduce((acc, currentValue) => {
+    acc[currentValue["Home Team Initials"]] =
+      (acc[currentValue["Home Team Initials"]] || 0) +
+      currentValue["Home Team Goals"];
+    acc[currentValue["Away Team Initials"]] =
+      (acc[currentValue["Away Team Initials"]] || 0) +
+      currentValue["Away Team Goals"];
+    return acc;
+  }, {});
+  const siraliGol = Object.keys(toplamGol).sort(
+    (a, b) => toplamGol[b] - toplamGol[a]
+  );
+
+  return siraliGol[0];
 }
 
+console.log("bonus 2 sonuç:", EnCokGolAtan(fifaData));
 /*  BONUS 3: 
 EnKotuDefans() adında bir fonksiyon yazın, `data` yı parametre olarak alsın ve Dünya kupasında finallerinde en çok golü yiyen takımı döndürsün*/
 
-function EnKotuDefans(/* kodlar buraya */) {
-  /* kodlar buraya */
-  /* kodlar buraya */
-  /* kodlar buraya */
-}
+function EnKotuDefans(data) {
+  finalMatches = Finaller(data);
+  toplamgolYenen = finalMatches.reduce((acc, currentValue) => {
+    acc[currentValue["Home Team Initials"]] =
+      (acc[currentValue["Home Team Initials"]] || 0) +
+      currentValue["Away Team Goals"];
+    acc[currentValue["Away Team Initials"]] =
+      (acc[currentValue["Away Team Initials"]] || 0) +
+      currentValue["Home Team Goals"];
+    return acc;
+  }, {});
+  console.log("kontrol noktası:", toplamgolYenen);
+  const siraliyenenGol = Object.keys(toplamgolYenen).sort(
+    (a, b) => toplamgolYenen[b] - toplamgolYenen[a]
+  );
 
+  return siraliyenenGol[0];
+}
+console.log("bonus 3 sonuç:", EnKotuDefans(fifaData));
 /* Hala vaktiniz varsa, README dosyasında listelenen hedeflerden istediğinizi aşağıdaki boşluğa yazabilirsiniz. */
 
 /* Bu satırın aşağısındaki kodları lütfen değiştirmeyin */
